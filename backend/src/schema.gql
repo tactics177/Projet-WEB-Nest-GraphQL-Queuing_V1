@@ -10,6 +10,7 @@ type Message {
   id: ID!
   content: String!
   user: User!
+  conversationId: String!
 }
 
 type Conversation {
