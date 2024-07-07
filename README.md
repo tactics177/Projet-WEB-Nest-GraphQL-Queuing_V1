@@ -1,6 +1,7 @@
 ## To run in local
 create .env.local file inside front folder with content:
 REACT_APP_API_URL=http://localhost:3000
+REACT_APP_GRAPHQL_URL=http://localhost:3000/graphql
 
 
 ## Setup
