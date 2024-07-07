@@ -1,4 +1,4 @@
-name: Build and Publish Docker Images
+name: Build, Push Docker Images, and Deploy to Azure
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build-and-push:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -37,3 +37,20 @@ jobs:
           file: ./front/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/chat-app-frontend:latest
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy backend to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ secrets.AZURE_WEBAPP_NAME_BACKEND }}
+          images: '${{ secrets.DOCKER_USERNAME }}/chat-app-backend:latest'
+
+      - name: Deploy frontend to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ secrets.AZURE_WEBAPP_NAME_FRONTEND }}
+          images: '${{ secrets.DOCKER_USERNAME }}/chat-app-frontend:latest'
