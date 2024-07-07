@@ -9,6 +9,7 @@ To run the application locally, follow these steps:
      ```env
      REACT_APP_API_URL=http://localhost:3000
      REACT_APP_GRAPHQL_URL=http://localhost:3000/graphql
+     REACT_APP_SOCKET_URL=http://localhost:3000
      ```
 
 2. **Setup and Run the Application**:
