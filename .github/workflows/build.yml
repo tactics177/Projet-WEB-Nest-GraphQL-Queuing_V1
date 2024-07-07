@@ -10,9 +10,10 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      docker:
-        image: docker:19.03.12
-        options: --privileged
+      redis:
+        image: redis:latest
+        ports:
+          - 6379:6379
 
     steps:
       - name: Checkout repository
@@ -44,7 +45,10 @@ jobs:
           tags: ${{ secrets.DOCKER_USERNAME }}/chat-app-frontend:latest
 
       - name: Start backend container
-        run: docker run -d -p 3000:3000 ${{ secrets.DOCKER_USERNAME }}/chat-app-backend:latest
+        run: docker run -d -p 3000:3000 --network host ${{ secrets.DOCKER_USERNAME }}/chat-app-backend:latest
+        env:
+          REDIS_HOST: localhost
+          REDIS_PORT: 6379
 
       - name: Wait for backend to be ready
         run: |
@@ -53,6 +57,7 @@ jobs:
               exit 0
             fi
             echo "Waiting for backend to be ready..."
+            docker logs $(docker ps -q --filter "ancestor=${{ secrets.DOCKER_USERNAME }}/chat-app-backend:latest") # Print logs to help with debugging
             sleep 5
           done
           echo "Backend is not ready"
