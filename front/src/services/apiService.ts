@@ -1,7 +1,6 @@
 import axios from 'axios';
 
-const isDevelopment = !process.env.NODE_ENV || process.env.NODE_ENV === 'development';
-const API_URL = isDevelopment ? 'http://localhost:3000' : process.env.REACT_APP_API_URL;
+const API_URL = process.env.REACT_APP_API_URL;
 
 export const healthCheck = async () => {
   try {
