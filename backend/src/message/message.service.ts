@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, ForbiddenException } from '@nestjs/common';
 import { Message } from './message.model';
 import { PrismaService } from '../prisma.service';
 
@@ -33,7 +33,12 @@ export class MessageService {
     return createdMessage;
   }
 
-  async getMessages(conversationId: string): Promise<Message[]> {
+  async getMessages(username: string, conversationId: string): Promise<Message[]> {
+    const isParticipant = await this.isUserInConversation(username, conversationId);
+    if (!isParticipant) {
+      throw new ForbiddenException('User is not a participant in this conversation');
+    }
+
     const messages = await this.prisma.message.findMany({
       where: {
         conversationId: conversationId,
@@ -43,5 +48,13 @@ export class MessageService {
       },
     });
     return messages;
+  }
+
+  private async isUserInConversation(username: string, conversationId: string): Promise<boolean> {
+    const conversation = await this.prisma.conversation.findUnique({
+      where: { id: conversationId },
+      include: { users: true },
+    });
+    return conversation.users.some(user => user.username === username);
   }
 }

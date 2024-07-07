@@ -27,6 +27,7 @@ type User {
 
 type Query {
   healthCheck: HealthCheckResult!
+  users: [User!]!
   getConversations(username: String!): [Conversation!]!
   getMessages(conversationId: String!): [Message!]!
 }
@@ -34,5 +35,5 @@ type Query {
 type Mutation {
   createUser(username: String!, password: String!): User!
   createConversation(username1: String!, username2: String!): Conversation!
-  createMessage(username: String!, content: String!, conversationId: String!): Message!
+  createMessage(content: String!, conversationId: String!): Message!
 }

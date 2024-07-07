@@ -1,4 +1,4 @@
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { User } from './user.model';
 import { UserService } from './user.service';
 
@@ -12,5 +12,10 @@ export class UserResolver {
     @Args('password') password: string,
   ): Promise<User> {
     return this.userService.createUser(username, password);
+  }
+
+  @Query(() => [User])
+  async users(): Promise<User[]> {
+    return this.userService.findAll();
   }
 }
