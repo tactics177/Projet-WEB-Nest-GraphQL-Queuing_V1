@@ -2,12 +2,13 @@ import { Processor, Process } from '@nestjs/bull';
 import { Job } from 'bull';
 import { Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
+import { MessageGateway } from './message.gateway';
 
 @Processor('message-queue')
 export class MessageProcessor {
   private readonly logger = new Logger(MessageProcessor.name);
 
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService, private messageGateway: MessageGateway) {}
 
   @Process('createMessage')
   async handleCreateMessage(job: Job) {
@@ -34,6 +35,7 @@ export class MessageProcessor {
     });
 
     this.logger.log(`Message created for conversation ${conversationId}`);
+    this.messageGateway.notifyNewMessage(conversationId, createdMessage);
     return createdMessage;
   }
 }
