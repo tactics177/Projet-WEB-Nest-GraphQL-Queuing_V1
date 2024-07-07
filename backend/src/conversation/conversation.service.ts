@@ -18,6 +18,7 @@ export class ConversationService {
         ],
       },
     });
+
     if (conversationExists) {
       throw new Error('Conversation already exists');
     }
