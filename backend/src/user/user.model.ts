@@ -9,6 +9,9 @@ export class User {
   @Field()
   username: string;
 
+  @Field()
+  password: string;
+
   @Field(() => [Conversation], { nullable: 'itemsAndList' })
   conversations?: Conversation[];
 }
