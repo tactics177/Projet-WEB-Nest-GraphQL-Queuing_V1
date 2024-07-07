@@ -7,7 +7,10 @@ export class UserResolver {
   constructor(private readonly userService: UserService) {}
 
   @Mutation(() => User)
-  async createUser(@Args('username') username: string): Promise<User> {
-    return this.userService.createUser(username);
+  async createUser(
+    @Args('username') username: string,
+    @Args('password') password: string,
+  ): Promise<User> {
+    return this.userService.createUser(username, password);
   }
 }

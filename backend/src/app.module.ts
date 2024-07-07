@@ -11,6 +11,7 @@ import { HealthCheckResolver } from './health-check/health-check.resolver';
 import {UserModule} from "./user/user.module";
 import { ConversationModule } from './conversation/conversation.module';
 import { MessageModule } from './message/message.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { MessageModule } from './message/message.module';
     UserModule,
     ConversationModule,
     MessageModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
