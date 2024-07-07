@@ -15,9 +15,7 @@ To run the application locally, follow these steps:
    ```bash
    $ cd Projet-WEB-Nest-GraphQL-Queuing_V1
    $ docker-compose up
-
-
-```
+   ```
 
 ## The app is deployed in Azure
 front: https://efreichatappfront.azurewebsites.net/
