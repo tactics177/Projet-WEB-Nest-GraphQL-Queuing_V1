@@ -54,3 +54,17 @@ jobs:
         with:
           app-name: ${{ secrets.AZURE_WEBAPP_NAME_FRONTEND }}
           images: '${{ secrets.DOCKER_USERNAME }}/chat-app-frontend:latest'
+
+      # Add Node.js setup
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      # Install Newman
+      - name: Install Newman
+        run: npm install -g newman
+
+      # Run Newman tests
+      - name: Run Newman tests
+        run: newman run ../backend/postman/Web_Project.postman_collection.json
