@@ -10,16 +10,6 @@ export class ConversationService {
     username1: string,
     username2: string,
   ): Promise<Conversation> {
-    const createdConversation = await this.prisma.conversation.create({
-      data: {
-        users: {
-          connect: [{ username: username1 }, { username: username2 }],
-        },
-      },
-      include: {
-        users: true,
-      },
-    });
     const conversationExists = await this.prisma.conversation.findFirst({
       where: {
         AND: [
@@ -31,20 +21,37 @@ export class ConversationService {
     if (conversationExists) {
       throw new Error('Conversation already exists');
     }
+
+    const createdConversation = await this.prisma.conversation.create({
+      data: {
+        users: {
+          connect: [{ username: username1 }, { username: username2 }],
+        },
+      },
+      include: {
+        users: true,
+      },
+    });
+
     return createdConversation;
   }
 
-  async getConversation(username1: string): Promise<Array<{ id: string }>> {
+  async getConversations(username: string): Promise<Conversation[]> {
     const conversations = await this.prisma.conversation.findMany({
       where: {
         users: {
           some: {
-            username: username1,
+            username: username,
           },
         },
       },
       include: {
         users: true,
+        messages: {
+          include: {
+            user: true,
+          },
+        },
       },
     });
     return conversations;

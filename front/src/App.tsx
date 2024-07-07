@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import HealthCheck from './components/HealthCheck';
+import Conversations from './components/Conversations';
 import Login from './components/Login';
 import Register from './components/Register';
 
@@ -12,7 +12,7 @@ const App: React.FC = () => {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/health-check" element={<HealthCheck />} />
+        <Route path="/conversations" element={<Conversations />} />
         <Route path="/" element={<Login />} />
       </Routes>
     </div>

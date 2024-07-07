@@ -1,15 +1,23 @@
-import React from 'react';
-import { createRoot } from 'react-dom/client';
-import './index.css';
-import App from './App';
-import { BrowserRouter as Router } from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import React from "react";
+import { createRoot } from "react-dom/client";
+import "./index.css";
+import App from "./App";
+import { BrowserRouter as Router } from "react-router-dom";
+import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+import "bootstrap/dist/css/bootstrap.min.css";
 
-const container = document.getElementById('root');
+const client = new ApolloClient({
+  uri: process.env.REACT_APP_GRAPHQL_URL,
+  cache: new InMemoryCache(),
+});
+
+const container = document.getElementById("root");
 const root = createRoot(container!);
 
 root.render(
-  <Router>
-    <App />
-  </Router>
+  <ApolloProvider client={client}>
+    <Router>
+      <App />
+    </Router>
+  </ApolloProvider>
 );

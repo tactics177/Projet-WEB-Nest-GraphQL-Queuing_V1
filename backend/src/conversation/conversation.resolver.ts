@@ -15,7 +15,7 @@ export class ConversationResolver {
   }
 
   @Query(() => [Conversation])
-  async getConversation(@Args('username1') username1: string) {
-    return this.conversationService.getConversation(username1);
+  async getConversations(@Args('username') username: string) {
+    return this.conversationService.getConversations(username);
   }
 }
