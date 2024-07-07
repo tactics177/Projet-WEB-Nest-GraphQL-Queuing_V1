@@ -18,7 +18,7 @@ model User {
   username      String         @unique
   password      String
   conversations Conversation[]
-  Message       Message[]
+  messages      Message[]
 }
 
 model Conversation {

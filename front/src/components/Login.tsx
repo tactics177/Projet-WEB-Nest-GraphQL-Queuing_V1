@@ -1,28 +1,30 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
+import { login } from '../services/apiService';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
-const API_URL = process.env.REACT_APP_API_URL;
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [loginError, setLoginError] = useState('');
   const navigate = useNavigate();
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post(`${API_URL}/auth/login`, { username, password });
-      localStorage.setItem('token', response.data.access_token);
-      navigate('/health-check');
+      const data = await login(username, password);
+      localStorage.setItem('token', data.access_token);
+      localStorage.setItem('username', data.username); // Store username
+      navigate('/conversations');
     } catch (error) {
       console.error('Login error:', error);
+      setLoginError('Invalid username or password');
     }
   };
 
   return (
     <div className="container mt-5">
       <h1>Login</h1>
+      {loginError && <div className="alert alert-danger">{loginError}</div>}
       <div className="form-group">
         <input
           type="text"

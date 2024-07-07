@@ -27,7 +27,7 @@ type User {
 
 type Query {
   healthCheck: HealthCheckResult!
-  getConversation(username1: String!): [Conversation!]!
+  getConversations(username: String!): [Conversation!]!
   getMessages(conversationId: String!): [Message!]!
 }
 
