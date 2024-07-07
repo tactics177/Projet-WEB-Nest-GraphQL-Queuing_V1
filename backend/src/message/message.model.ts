@@ -11,4 +11,7 @@ export class Message {
 
   @Field(() => User)
   user: User;
+
+  @Field()
+  conversationId: string;
 }
