@@ -8,7 +8,7 @@ export class User {
 
   @Field()
   username: string;
-  
+
   @Field(() => [Conversation], { nullable: 'itemsAndList' })
   conversations?: Conversation[];
 }
