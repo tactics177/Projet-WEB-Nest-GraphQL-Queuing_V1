@@ -12,6 +12,7 @@ import {UserModule} from "./user/user.module";
 import { ConversationModule } from './conversation/conversation.module';
 import { MessageModule } from './message/message.module';
 import { AuthModule } from './auth/auth.module';
+import { MessageGateway } from './message/message.gateway';
 
 @Module({
   imports: [
@@ -38,6 +39,6 @@ import { AuthModule } from './auth/auth.module';
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, MessageGateway],
 })
 export class AppModule {}
