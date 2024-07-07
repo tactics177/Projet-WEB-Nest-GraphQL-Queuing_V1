@@ -9,6 +9,11 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
+    services:
+      docker:
+        image: docker:19.03.12
+        options: --privileged
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -37,6 +42,21 @@ jobs:
           file: ./front/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/chat-app-frontend:latest
+
+      - name: Start backend container
+        run: docker run -d -p 3000:3000 ${{ secrets.DOCKER_USERNAME }}/chat-app-backend:latest
+
+      - name: Wait for backend to be ready
+        run: |
+          for i in {1..30}; do
+            if curl -s http://localhost:3000/graphql; then
+              exit 0
+            fi
+            echo "Waiting for backend to be ready..."
+            sleep 5
+          done
+          echo "Backend is not ready"
+          exit 1
 
       - name: Azure Login
         uses: azure/login@v1
