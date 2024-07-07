@@ -13,7 +13,7 @@ const Login: React.FC = () => {
     try {
       const data = await login(username, password);
       localStorage.setItem('token', data.access_token);
-      localStorage.setItem('username', data.username); // Store username
+      localStorage.setItem('username', data.username);
       navigate('/conversations');
     } catch (error) {
       console.error('Login error:', error);
