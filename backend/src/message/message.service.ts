@@ -1,36 +1,39 @@
 import { Injectable, ForbiddenException } from '@nestjs/common';
+import { InjectQueue } from '@nestjs/bull';
+import { Queue } from 'bull';
 import { Message } from './message.model';
 import { PrismaService } from '../prisma.service';
 
 @Injectable()
 export class MessageService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    @InjectQueue('message-queue') private messageQueue: Queue,
+  ) {}
 
   async createMessage(
     username: string,
     content: string,
     conversationId: string,
   ): Promise<Message> {
-    const createdMessage = await this.prisma.message.create({
-      data: {
-        content: content,
-        user: {
-          connect: {
-            username: username,
-          },
-        },
-        conversation: {
-          connect: {
-            id: conversationId,
-          },
-        },
-      },
-      include: {
-        user: true,
-      },
+    await this.messageQueue.add('createMessage', {
+      username,
+      content,
+      conversationId,
     });
-    const { userId, ...rest } = createdMessage;
-    return createdMessage;
+
+    return new Promise((resolve, reject) => {
+      this.messageQueue.on('completed', (job, result) => {
+        if (job.data.conversationId === conversationId) {
+          resolve(result);
+        }
+      });
+      this.messageQueue.on('failed', (job, err) => {
+        if (job.data.conversationId === conversationId) {
+          reject(err);
+        }
+      });
+    });
   }
 
   async getMessages(username: string, conversationId: string): Promise<Message[]> {
