@@ -31,7 +31,11 @@ describe('UserResolver', () => {
 
   describe('createUser', () => {
     it('should create a user', async () => {
-      const user: User = { id: '1', username: 'testuser', password: 'testpass' };
+      const user: User = {
+        id: '1',
+        username: 'testuser',
+        password: 'testpass',
+      };
       jest.spyOn(service, 'createUser').mockResolvedValue(user);
 
       const result = await resolver.createUser('testuser', 'testpass');

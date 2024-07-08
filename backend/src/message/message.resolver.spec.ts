@@ -45,21 +45,51 @@ describe('MessageResolver', () => {
         id: '1',
         content: 'Hello',
         conversationId: '1',
-        user: { id: '1', username: 'testuser', password: 'hashedpassword' } as User,
+        user: {
+          id: '1',
+          username: 'testuser',
+          password: 'hashedpassword',
+        } as User,
       };
       jest.spyOn(service, 'createMessage').mockResolvedValue(message);
 
-      const result = await resolver.createMessage({ username: 'testuser' }, 'Hello', '1');
+      const result = await resolver.createMessage(
+        { username: 'testuser' },
+        'Hello',
+        '1',
+      );
       expect(result).toEqual(message);
-      expect(service.createMessage).toHaveBeenCalledWith('testuser', 'Hello', '1');
+      expect(service.createMessage).toHaveBeenCalledWith(
+        'testuser',
+        'Hello',
+        '1',
+      );
     });
   });
 
   describe('getMessages', () => {
     it('should return an array of messages', async () => {
       const messages: Message[] = [
-        { id: '1', content: 'Hello', conversationId: '1', user: { id: '1', username: 'testuser', password: 'hashedpassword' } as User },
-        { id: '2', content: 'Hi', conversationId: '1', user: { id: '1', username: 'testuser', password: 'hashedpassword' } as User },
+        {
+          id: '1',
+          content: 'Hello',
+          conversationId: '1',
+          user: {
+            id: '1',
+            username: 'testuser',
+            password: 'hashedpassword',
+          } as User,
+        },
+        {
+          id: '2',
+          content: 'Hi',
+          conversationId: '1',
+          user: {
+            id: '1',
+            username: 'testuser',
+            password: 'hashedpassword',
+          } as User,
+        },
       ];
       jest.spyOn(service, 'getMessages').mockResolvedValue(messages);
 
