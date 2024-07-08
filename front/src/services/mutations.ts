@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client';
+import { gql } from "@apollo/client";
 
 export const START_CONVERSATION = gql`
   mutation StartConversation($username1: String!, $username2: String!) {

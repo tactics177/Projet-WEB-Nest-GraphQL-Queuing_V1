@@ -1,14 +1,14 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const Header: React.FC = () => {
-  const username = localStorage.getItem('username');
+  const username = localStorage.getItem("username");
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('username');
-    navigate('/login');
+    localStorage.removeItem("token");
+    localStorage.removeItem("username");
+    navigate("/login");
   };
 
   return (

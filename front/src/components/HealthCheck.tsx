@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { healthCheck } from '../services/apiService';
+import React, { useEffect, useState } from "react";
+import { healthCheck } from "../services/apiService";
 
 const HealthCheck: React.FC = () => {
-  const [status, setStatus] = useState<string>('Loading...');
+  const [status, setStatus] = useState<string>("Loading...");
 
   useEffect(() => {
     const checkHealth = async () => {
@@ -10,7 +10,7 @@ const HealthCheck: React.FC = () => {
         const result = await healthCheck();
         setStatus(result);
       } catch (error) {
-        setStatus('Error');
+        setStatus("Error");
       }
     };
 

@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { useQuery, useMutation } from '@apollo/client';
-import { GET_MESSAGES } from '../services/queries';
-import { CREATE_MESSAGE } from '../services/mutations';
-import socket from '../services/socket';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import React, { useEffect, useState } from "react";
+import { useQuery, useMutation } from "@apollo/client";
+import { GET_MESSAGES } from "../services/queries";
+import { CREATE_MESSAGE } from "../services/mutations";
+import socket from "../services/socket";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 interface Message {
   id: string;
@@ -15,13 +15,13 @@ interface Message {
 }
 
 const Messages: React.FC<{ conversation: any }> = ({ conversation }) => {
-  const username = localStorage.getItem('username');
+  const username = localStorage.getItem("username");
   const { loading, error, data } = useQuery(GET_MESSAGES, {
     variables: { conversationId: conversation.id },
   });
 
   const [createMessage] = useMutation(CREATE_MESSAGE);
-  const [messageContent, setMessageContent] = useState('');
+  const [messageContent, setMessageContent] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
 
   useEffect(() => {
@@ -31,18 +31,18 @@ const Messages: React.FC<{ conversation: any }> = ({ conversation }) => {
   }, [data]);
 
   useEffect(() => {
-    socket.emit('joinRoom', conversation.id);
-    
+    socket.emit("joinRoom", conversation.id);
+
     const handleNewMessage = (message: Message) => {
       if (message.conversationId === conversation.id) {
         setMessages((prevMessages) => [...prevMessages, message]);
       }
     };
 
-    socket.on('newMessage', handleNewMessage);
+    socket.on("newMessage", handleNewMessage);
 
     return () => {
-      socket.off('newMessage', handleNewMessage);
+      socket.off("newMessage", handleNewMessage);
     };
   }, [conversation.id]);
 
@@ -50,7 +50,7 @@ const Messages: React.FC<{ conversation: any }> = ({ conversation }) => {
   if (error) return <div>Error fetching messages</div>;
 
   const handleSendMessage = async () => {
-    if (messageContent.trim() === '') return;
+    if (messageContent.trim() === "") return;
 
     await createMessage({
       variables: {
@@ -59,7 +59,7 @@ const Messages: React.FC<{ conversation: any }> = ({ conversation }) => {
       },
     });
 
-    setMessageContent('');
+    setMessageContent("");
   };
 
   return (
