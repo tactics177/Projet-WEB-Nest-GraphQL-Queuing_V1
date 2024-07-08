@@ -1,22 +1,22 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
 const Register: React.FC = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
   const handleRegister = async () => {
     try {
       await axios.post(`${API_URL}/auth/register`, { username, password });
-      alert('Registration successful! You can now log in.');
-      navigate('/login');
+      alert("Registration successful! You can now log in.");
+      navigate("/login");
     } catch (error) {
-      console.error('Registration error:', error);
+      console.error("Registration error:", error);
     }
   };
 
@@ -41,7 +41,9 @@ const Register: React.FC = () => {
           onChange={(e) => setPassword(e.target.value)}
         />
       </div>
-      <button onClick={handleRegister} className="btn btn-primary mt-3">Register</button>
+      <button onClick={handleRegister} className="btn btn-primary mt-3">
+        Register
+      </button>
     </div>
   );
 };

@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
-import { login } from '../services/apiService';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { checkTokenExpiration } from '../utils/auth';
+import { login } from "../services/apiService";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { checkTokenExpiration } from "../utils/auth";
 
 const Login: React.FC = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [loginError, setLoginError] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [loginError, setLoginError] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -18,17 +18,17 @@ const Login: React.FC = () => {
   const handleLogin = async () => {
     try {
       const data = await login(username, password);
-      localStorage.setItem('token', data.access_token);
-      localStorage.setItem('username', data.username);
+      localStorage.setItem("token", data.access_token);
+      localStorage.setItem("username", data.username);
       const decodedToken: any = jwtDecode(data.access_token);
       const expiresIn = decodedToken.exp - Math.floor(Date.now() / 1000);
       setTimeout(() => {
         checkTokenExpiration(navigate);
       }, expiresIn * 1000);
-      navigate('/conversations');
+      navigate("/conversations");
     } catch (error) {
-      console.error('Login error:', error);
-      setLoginError('Invalid username or password');
+      console.error("Login error:", error);
+      setLoginError("Invalid username or password");
     }
   };
 
@@ -54,7 +54,9 @@ const Login: React.FC = () => {
           onChange={(e) => setPassword(e.target.value)}
         />
       </div>
-      <button onClick={handleLogin} className="btn btn-primary mt-3">Login</button>
+      <button onClick={handleLogin} className="btn btn-primary mt-3">
+        Login
+      </button>
       <p className="mt-3">
         Don't have an account? <Link to="/register">Sign up</Link>
       </p>
