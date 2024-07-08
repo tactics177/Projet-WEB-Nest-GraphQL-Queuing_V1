@@ -126,6 +126,122 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Create conversation",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Generate unique usernames using timestamps\r",
+							"const user1 = {\r",
+							"  username: `user1_${Date.now()}`,\r",
+							"  password: 'password1'\r",
+							"};\r",
+							"\r",
+							"const user2 = {\r",
+							"  username: `user2_${Date.now()}`,\r",
+							"  password: 'password2'\r",
+							"};\r",
+							"\r",
+							"// Save the unique usernames to environment variables for later use\r",
+							"pm.environment.set('user1_username', user1.username);\r",
+							"pm.environment.set('user2_username', user2.username);\r",
+							"\r",
+							"// Register User 1\r",
+							"pm.sendRequest({\r",
+							"  url: 'http://localhost:3000/auth/register',\r",
+							"  method: 'POST',\r",
+							"  header: 'Content-Type: application/json',\r",
+							"  body: {\r",
+							"    mode: 'raw',\r",
+							"    raw: JSON.stringify(user1)\r",
+							"  }\r",
+							"}, function (err, res) {\r",
+							"  if (err) {\r",
+							"    console.log('Error registering user1:', err);\r",
+							"  } else {\r",
+							"    console.log('User1 registered:', res.json());\r",
+							"\r",
+							"    // Register User 2\r",
+							"    pm.sendRequest({\r",
+							"      url: 'http://localhost:3000/auth/register',\r",
+							"      method: 'POST',\r",
+							"      header: 'Content-Type: application/json',\r",
+							"      body: {\r",
+							"        mode: 'raw',\r",
+							"        raw: JSON.stringify(user2)\r",
+							"      }\r",
+							"    }, function (err, res) {\r",
+							"      if (err) {\r",
+							"        console.log('Error registering user2:', err);\r",
+							"      } else {\r",
+							"        console.log('User2 registered:', res.json());\r",
+							"\r",
+							"        // Login User 1\r",
+							"        pm.sendRequest({\r",
+							"          url: 'http://localhost:3000/auth/login',\r",
+							"          method: 'POST',\r",
+							"          header: 'Content-Type: application/json',\r",
+							"          body: {\r",
+							"            mode: 'raw',\r",
+							"            raw: JSON.stringify(user1)\r",
+							"          }\r",
+							"        }, function (err, res) {\r",
+							"          if (err) {\r",
+							"            console.log('Error logging in user1:', err);\r",
+							"          } else {\r",
+							"            const jsonData = res.json();\r",
+							"            const token = jsonData.access_token;\r",
+							"            pm.environment.set('accessToken', token);\r",
+							"          }\r",
+							"        });\r",
+							"      }\r",
+							"    });\r",
+							"  }\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{accessToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation {\r\n  createConversation(username1: \"{{user1_username}}\", username2: \"{{user2_username}}\") {\r\n    id\r\n    users {\r\n      id\r\n      username\r\n    }\r\n  }\r\n}\r\n",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/graphql",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"graphql"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
