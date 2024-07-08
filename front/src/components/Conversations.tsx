@@ -1,12 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
+import { useNavigate } from 'react-router-dom';
 import { GET_CONVERSATIONS, GET_USERS } from '../services/queries';
 import { START_CONVERSATION } from '../services/mutations';
 import Messages from './Messages';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { checkTokenExpiration } from '../utils/auth';
 
 const Conversations: React.FC = () => {
+  const navigate = useNavigate();
   const username = localStorage.getItem('username');
+  
+  useEffect(() => {
+    checkTokenExpiration(navigate);
+  }, [navigate]);
+
   const { loading: conversationsLoading, error: conversationsError, data: conversationsData, refetch } = useQuery(GET_CONVERSATIONS, {
     variables: { username },
   });
