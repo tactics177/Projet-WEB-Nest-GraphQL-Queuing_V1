@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { jwtDecode } from "jwt-decode";
 import { login } from '../services/apiService';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { checkTokenExpiration } from '../utils/auth';
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -11,19 +12,7 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      const decodedToken: any = jwtDecode(token);
-      const currentTime = Date.now() / 1000;
-      if (decodedToken.exp < currentTime) {
-        // Token is expired
-        localStorage.removeItem('token');
-        localStorage.removeItem('username');
-        alert('Session expired. Please log in again.');
-      } else {
-        navigate('/conversations');
-      }
-    }
+    checkTokenExpiration(navigate);
   }, [navigate]);
 
   const handleLogin = async () => {
@@ -34,10 +23,7 @@ const Login: React.FC = () => {
       const decodedToken: any = jwtDecode(data.access_token);
       const expiresIn = decodedToken.exp - Math.floor(Date.now() / 1000);
       setTimeout(() => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('username');
-        alert('Session expired. Please log in again.');
-        navigate('/login');
+        checkTokenExpiration(navigate);
       }, expiresIn * 1000);
       navigate('/conversations');
     } catch (error) {
