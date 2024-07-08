@@ -6,11 +6,12 @@ import { START_CONVERSATION } from '../services/mutations';
 import Messages from './Messages';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { checkTokenExpiration } from '../utils/auth';
+import '../styles/Conversations.css';
 
 const Conversations: React.FC = () => {
   const navigate = useNavigate();
   const username = localStorage.getItem('username');
-  
+
   useEffect(() => {
     checkTokenExpiration(navigate);
   }, [navigate]);
@@ -26,6 +27,7 @@ const Conversations: React.FC = () => {
   const [selectedConversation, setSelectedConversation] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   if (conversationsLoading || usersLoading) return <div>Loading...</div>;
   if (conversationsError) return <div>Error fetching conversations</div>;
@@ -47,6 +49,7 @@ const Conversations: React.FC = () => {
       await startConversation({ variables: { username1: username, username2 } });
       refetch(); // Refetch conversations after starting a new one
       setError(null);
+      setDropdownOpen(false); // Close the dropdown after starting a conversation
     } catch (err: any) {
       if (err.message === 'Conversation already exists') {
         setError('Conversation already exists');
@@ -74,22 +77,34 @@ const Conversations: React.FC = () => {
       />
       <div className="row">
         <div className="col-4">
-          {filteredUsers.length > 0 ? (
-            <ul className="list-group">
-              {filteredUsers.map((user: any) => (
-                <li
-                  key={user.id}
-                  className={`list-group-item list-group-item-action ${startingConversation ? 'disabled' : ''}`}
-                  onClick={() => !startingConversation && handleStartConversation(user.username)}
-                  style={{ cursor: startingConversation ? 'not-allowed' : 'pointer' }}
-                >
-                  {user.username}
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>No users available for a new conversation</p>
-          )}
+          <div className="dropdown">
+            <button
+              className="btn btn-secondary dropdown-toggle"
+              type="button"
+              id="dropdownMenuButton"
+              aria-haspopup="true"
+              aria-expanded={dropdownOpen}
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+            >
+              Select a user to start a conversation
+            </button>
+            <div className={`dropdown-menu scrollable-dropdown ${dropdownOpen ? 'show' : ''}`} aria-labelledby="dropdownMenuButton">
+              {filteredUsers.length > 0 ? (
+                filteredUsers.map((user: any) => (
+                  <button
+                    key={user.id}
+                    className={`dropdown-item ${startingConversation ? 'disabled' : ''}`}
+                    onClick={() => !startingConversation && handleStartConversation(user.username)}
+                    style={{ cursor: startingConversation ? 'not-allowed' : 'pointer' }}
+                  >
+                    {user.username}
+                  </button>
+                ))
+              ) : (
+                <div className="dropdown-item">No users available for a new conversation</div>
+              )}
+            </div>
+          </div>
           <h3 className="mt-5">Your Conversations</h3>
           <ul className="list-group">
             {conversationsData.getConversations.map((conversation: any) => (
@@ -119,3 +134,4 @@ const Conversations: React.FC = () => {
 };
 
 export default Conversations;
+
