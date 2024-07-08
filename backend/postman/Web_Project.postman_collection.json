@@ -54,12 +54,48 @@
 		},
 		{
 			"name": "Get all users",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.sendRequest({\r",
+							"  url: 'http://localhost:3000/auth/login',\r",
+							"  method: 'POST',\r",
+							"  header: 'Content-Type: application/json',\r",
+							"  body: {\r",
+							"    mode: 'raw',\r",
+							"    raw: JSON.stringify({\r",
+							"      username: 'test1',\r",
+							"      password: 'test1234'\r",
+							"    })\r",
+							"  }\r",
+							"}, function (err, res) {\r",
+							"  if (err) {\r",
+							"    console.log(err);\r",
+							"  } else {\r",
+							"    var jsonData = res.json();\r",
+							"    pm.environment.set(\"accessToken\", jsonData.access_token);\r",
+							"  }\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [
 					{
 						"key": "Content-Type",
 						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{accessToken}}",
 						"type": "text"
 					}
 				],
