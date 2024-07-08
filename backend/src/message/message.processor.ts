@@ -4,12 +4,20 @@ import { Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { MessageGateway } from './message.gateway';
 
+/**
+ * Processor class for handling message queue jobs.
+ */
 @Processor('message-queue')
 export class MessageProcessor {
   private readonly logger = new Logger(MessageProcessor.name);
 
   constructor(private prisma: PrismaService, private messageGateway: MessageGateway) {}
 
+  /**
+   * Handles the 'createMessage' job from the message queue.
+   * @param job - The job object containing the data for creating a new message.
+   * @returns The created message.
+   */
   @Process('createMessage')
   async handleCreateMessage(job: Job) {
     this.logger.log(`Processing job ${job.id} with data: ${JSON.stringify(job.data)}`);

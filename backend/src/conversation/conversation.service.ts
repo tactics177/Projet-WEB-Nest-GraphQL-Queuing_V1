@@ -6,6 +6,13 @@ import { Conversation } from './conversation.model';
 export class ConversationService {
   constructor(private prisma: PrismaService) {}
 
+  /**
+   * Creates a new conversation between two users.
+   * @param username1 - The username of the first user.
+   * @param username2 - The username of the second user.
+   * @returns A Promise that resolves to the created Conversation.
+   * @throws Error if the conversation already exists.
+   */
   async createConversation(
     username1: string,
     username2: string,
@@ -37,6 +44,11 @@ export class ConversationService {
     return createdConversation;
   }
 
+  /**
+   * Retrieves all conversations for a given user.
+   * @param username - The username of the user.
+   * @returns A Promise that resolves to an array of Conversation objects.
+   */
   async getConversations(username: string): Promise<Conversation[]> {
     const conversations = await this.prisma.conversation.findMany({
       where: {

@@ -8,6 +8,9 @@ import { LocalStrategy } from './local.strategy';
 import { JwtStrategy } from './jwt.strategy';
 import { AuthController } from './auth.controller';
 
+/**
+ * Module responsible for authentication-related functionality.
+ */
 @Module({
   imports: [
     UserModule,
